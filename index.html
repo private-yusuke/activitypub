@@ -366,17 +366,18 @@
           This specification defines two closely related and interacting
           protocols:
         </p>
+        <p>
+          この仕様書では、2つの密接に関係および相互作用するプロトコルを定義します：
+        </p>
         <dl>
-          <dt>A client to server protocol, or "Social API"</dt>
+          <dt>クライアント-サーバー間のプロトコル、すなわち「ソーシャル API」</dt>
           <dd>
-            This protocol permits a client to act <i>on behalf</i> of a user.
-            For example, this protocol is used by a mobile phone application to
-            interact with a social stream of the user's actor.
+            このプロトコルは、ユーザーに<i>代わって</i>クライアントが動作することを可能にします。
+            例えば、このプロトコルは、ユーザーの actor のソーシャルストリームと接する携帯電話のアプリケーションによって利用されます。
           </dd>
-          <dt>A server to server protocol, or "Federation Protocol"</dt>
+          <dt>サーバー間のプロトコル、すなわち「連合プロトコル」</dt>
           <dd>
-            This protocol is used to distribute activities between actors on
-            different servers, tying them into the same social graph.
+            このプロトコルは、別々のサーバー上の actor たちによる activity を分配し、それらを同一のソーシャルグラフの内に結びつけるために利用されます。
           </dd>
         </dl>
         <p>
@@ -386,21 +387,23 @@
           However, servers may still implement one without the other.
           This gives three conformance classes:
         </p>
+        <p>
+          これらのプロトコルのうちどちらか一方を実装したら、もう片方をサポートするのにわずかな努力しか必要がないように ActivityPub の仕様は設計されています。
+          しかしながら、依然としてサーバー側では片方のみしか実装しないこともあります。
+          このことは次の3つの準拠クラスを与えます：
+        </p>
         <dl>
-          <dt>ActivityPub conformant Client</dt>
+          <dt>ActivityPub に準拠したクライアント</dt>
           <dd>
-            This designation applies to any implementation of the entirety of the
-            client portion of the client to server protocol.
+            この指定は、クライアント-サーバー間プロトコルのクライアントの部分すべての実装を持つものに当てはまります。
           </dd>
-          <dt>ActivityPub conformant Server</dt>
+          <dt>ActivityPub に準拠したサーバー</dt>
           <dd>
-            This designation applies to any implementation of the entirety of the
-            server portion of the client to server protocol.
+            この指定は、クライアント-サーバー間プロトコルのサーバーの部分すべての実装を持つものに当てはまります。
           </dd>
-          <dt>ActivityPub conformant Federated Server</dt>
+          <dt>ActivityPub に準拠した連合済みサーバー</dt>
           <dd>
-            This designation applies to any implementation of the entirety of
-            the federation protocols.
+            この指定は、連合プロトコルのサーバーの部分すべての実装を持つものに当てはまります。
           </dd>
         </dl>
         <p>
@@ -410,6 +413,10 @@
           whether they apply to the client or server (for the client-to-server
           protocol) or whether referring to a sending or receiving server in
           the server-to-server protocol.
+        </p>
+        <p>
+          仕様の一部が連合プロトコルの実装にのみ当てはまる場合にのみ呼ばれます。
+          また、必要条件が指定されているときはいつでも、（クライアント-サーバー間のプロトコルについては）それらがクライアントまたはサーバーに当てはまるかどうか、またはサーバー間のプロトコルの内で送受信を行うサーバーについて言及するかどうかで呼ばれます。
         </p>
       </section>
     </section>
