@@ -361,13 +361,9 @@
 
     <section id="conformance">
       <section id="specification-profiles">
-        <h2>Specification Profiles</h2>
+        <h2>仕様のプロフィール</h2>
         <p>
-          This specification defines two closely related and interacting
-          protocols:
-        </p>
-        <p>
-          この仕様書では、2つの密接に関係および相互作用するプロトコルを定義します：
+          この仕様書では、密接に関係・相互作用する 2 つのプロトコルを定義します：
         </p>
         <dl>
           <dt>クライアント-サーバー間のプロトコル、すなわち「ソーシャル API」</dt>
@@ -380,13 +376,6 @@
             このプロトコルは、別々のサーバー上の actor たちによる activity を分配し、それらを同一のソーシャルグラフの内に結びつけるために利用されます。
           </dd>
         </dl>
-        <p>
-          The ActivityPub specification is designed so that once either of
-          these protocols are implemented, supporting the other is of very
-          little additional effort.
-          However, servers may still implement one without the other.
-          This gives three conformance classes:
-        </p>
         <p>
           これらのプロトコルのうちどちらか一方を実装したら、もう片方をサポートするのにわずかな努力しか必要がないように ActivityPub の仕様は設計されています。
           しかしながら、依然としてサーバー側では片方のみしか実装しないこともあります。
@@ -406,17 +395,19 @@
             この指定は、連合プロトコルのサーバーの部分すべての実装を持つものに当てはまります。
           </dd>
         </dl>
-        <p>
+        <!-- <p>
           It is called out whenever a portion of the specification only applies
           to implementation of the federation protocol.
           In addition, whenever requirements are specified, it is called out
           whether they apply to the client or server (for the client-to-server
           protocol) or whether referring to a sending or receiving server in
           the server-to-server protocol.
-        </p>
+        </p> -->
+        <!-- TODO: 自然な訳になっているかどうか再チェック -->
         <p>
-          仕様の一部が連合プロトコルの実装にのみ当てはまる場合にのみ呼ばれます。
-          また、必要条件が指定されているときはいつでも、（クライアント-サーバー間のプロトコルについては）それらがクライアントまたはサーバーに当てはまるかどうか、またはサーバー間のプロトコルの内で送受信を行うサーバーについて言及するかどうかで呼ばれます。
+          連合プロトコルの実装に仕様の一部が当てはまる場合にのみ、このように分類されて呼ばれます。
+          また、必要条件が指定されているときはいつでも、（クライアント-サーバー間のプロトコルについては）それらがクライアントまたはサーバーに当てはまるかどうか、
+          またはサーバー間のプロトコルの内で送受信を行うサーバーについて言及するかどうかで呼ばれます。
         </p>
       </section>
     </section>
