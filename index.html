@@ -733,69 +733,45 @@
     <section id="collections">
       <h2>Collections</h2>
       <p>
-        [[!ActivityStreams]] defines the collection concept; ActivityPub
-        defines several collections with special behavior.
-        Note that ActivityPub makes use of
+        [[!ActivityStreams]] は collection の概念を定義しますが、ActivityPub は特殊なふるまいをする collection をいくつか定義します。
+        ActivityPub はオブジェクトを集めた大きな集合を走査するために
         <a href="https://www.w3.org/TR/activitystreams-core/#paging">
-          ActivityStreams paging</a>
-        to traverse large sets of objects.
+          ActivityStreams のページング</a>を活用していることに注意してください。
       </p>
 
       <p>
-        Note that some of these collections are specified to be of type
+        これらのいくつかの collection は、具体的には
         <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
-          <code>OrderedCollection</code></a>
-        specifically, while others are permitted to be either a
+          <code>OrderedCollection</code></a> の型を持つように指定されていることもあれば、他のものは
         <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
           <code>Collection</code></a>
-        or an
-        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
-          <code>OrderedCollection</code></a>.
-        An
+        または
         <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
           <code>OrderedCollection</code></a>
-        MUST be presented consistently in reverse chronological order.
+        となることが許されていることもあることに注意してください。
+        <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
+          <code>OrderedCollection</code></a> は、一貫して逆の年代順で（訳注：時間的な流れをさかのぼって）表現されていなければいけません。
       </p>
 
       <p class="note">
-        What property is used to determine the reverse chronological order
-        is intentionally left as an implementation detail.
-        For example, many SQL-style databases use an incrementing integer
-        as an identifier, which can be reasonably used for handling
-        insertion order in most cases.
-        In other databases, an insertion time timestamp may be preferred.
-        What is used isn't important, but the ordering of elements must
-        remain intact, with newer items first.
-        A property which changes regularly, such a "last updated" timestamp,
-        should not be used.
+        逆の年代順を決定するために仕様されるプロパティは実装詳細として意図的に残されています。例えば、多くの SQL スタイルのデータベースはインクリメントされていく整数を識別子として使用します。これは、ほとんどの場合で挿入された順序を扱うときには合理的に使用できます。
+        他のデータベースでは、挿入された時間のタイムスタンプが優先されることがあります。何を使用するかは重要ではないですが、要素の順序は、新しいものが最初に来るということと共にそのままでなければいけません。定期的に変更される「最後の更新日時」のようなタイムスタンプは使用されるべきではありません。
       </p>
 
       <section id="outbox">
         <h2>Outbox</h2>
         <p>
-          The outbox is discovered through the <code>outbox</code>
-          property of an <a href="#actors">actor's</a> profile.
-          The <code>outbox</code> MUST be an
-          <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
-            <code>OrderedCollection</code></a>.
+          outbox は、<a href="#actors">actor</a> のプロフィールにある <code>outbox</code> から見つけることができます。
+          <code>outbox</code> は <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
+            <code>OrderedCollection</code></a> でなければいけません。
         </p>
         <p>
-          The outbox stream contains activities the user has
-          published, subject to the ability of the requestor to retrieve the
-          activity (that is, the contents of the outbox are filtered by the
-          permissions of the person reading it).
-          If a user submits a request without
-          <a href="#authorization">Authorization</a> the server should
-          respond with all of the <a href="#public-addressing">Public</a>
-          posts.
-          This could potentially be all relevant objects published by the
-          user, though the number of available items is left to the
-          discretion of those implementing and deploying the server.
+          outbox ストリームはユーザーが公開した activity を含んでおり、要求者が activity を受け取れるような機能を提供します（つまり、outbox のコンテンツは読む人の権限によってフィルタリングされます）。
+          ユーザーが<a href="#authorization">認可</a>なしにリクエストを送信した場合、サーバーはすべての <a href="#public-addressing">Public</a> な投稿で応答する必要があります。
+          これは、ユーザーによって公開されたすべての関連するオブジェクトとなる可能性がありますが、利用可能なアイテムはサーバーを実装およびデプロイする側の裁量に任されています。
         </p>
         <p>
-          The outbox accepts HTTP POST requests, with behaviour described in
-          <a href="#client-to-server-interactions">Client to Server
-            Interactions</a>.
+          outbox は<a href="#client-to-server-interactions">クライアント-サーバー間のやりとり</a>にて述べられているふるまいと共に HTTP POST リクエストを受け付けます。
         </p>
       </section>
 
@@ -803,114 +779,89 @@
         <h2>Inbox</h2>
 
         <p>
-          The inbox is discovered through the <code>inbox</code>
-          property of an <a href="#actors">actor's</a> profile.
-          The <code>inbox</code> MUST be an
-          <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
-            <code>OrderedCollection</code></a>.
+          inbox は、<a href="#actors">actor</a> のプロフィールにある <code>inbox</code> から見つけることができます。
+          <code>inbox</code> は <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
+            <code>OrderedCollection</code></a> でなければいけません。
         </p>
 
         <p>
-          The inbox stream contains all activities received by the
-          actor.
-          The server SHOULD filter content according to the requester's
-          permission.
-          In general, the owner of an inbox is likely to be able to access
-          all of their inbox contents. Depending on access control, some
-          other content may be public, whereas other content may require
-          authentication for non-owner users, if they can access the inbox
-          at all.
+          inbox ストリームはユーザーが受け取った activity を含んでいます。
+          サーバーは、要求者の権限に応じてコンテンツをフィルタリングする必要があります。
+          一般的に、inbox のオーナーはおそらく彼らの inbox のすべてのコンテンツにアクセスできるでしょう。
+          アクセスコントロールに応じて、あるコンテンツは公開されている場合がありますが、オーナーでないユーザーが inbox にアクセスできる場合は、他のコンテンツについては認証を要求する場合もあります。
         </p>
 
         <p>
-          The server MUST perform de-duplication of activities returned by
-          the inbox. Duplication can occur if an activity is addressed both
-          to an actor's followers, and a specific
-          actor who also follows the recipient actor, and the server has failed
-          to de-duplicate the recipients list.
-          Such deduplication MUST be performed by comparing the
-          <code>id</code> of the activities and dropping any activities
-          already seen.
+          サーバーは inbox によって返される activity の重複を除去しなければいけません。ある activity が actor のフォロワーと、受信者となる actor をフォローしている actor を宛先としているときに、サーバーが受信者リストの重複除去に失敗すると重複が発生してしまいます。
+          そのような重複除去は、activity の <code>id</code> を比較して、すでに見た activity を落とすことで行なわれなければいけません。
         </p>
 
         <p>
-          The inboxes of actors on federated servers accepts HTTP POST requests,
-          with behaviour described in <a href="#delivery">Delivery</a>.
-          Non-federated servers SHOULD return a 405 Method Not Allowed upon
-          receipt of a POST request.
+          連合しているサーバー上の actor の inbox は<a href="#delivery">配送</a>にて述べられているふるまいと共に HTTP POST リクエストを受け付けます。
+          連合していないサーバーは、POST リクエストの受信に対して 405 Method Not Allowed を返すべきです。
         </p>
       </section>
 
       <section id="followers">
         <h2>Followers Collection</h2>
         <p>
-          Every <a href="#actors">actor</a> SHOULD have a <code>followers</code>
-          collection.
-          This is a list of everyone who has sent a
+          すべての <a href="#actors">actor</a> は <code>followers</code> collection を持つべきです。
+          これは、
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-follow">Follow</a>
-          activity for the actor, added as a
-          <a href="#follow-activity-outbox">side effect</a>.
-          This is where one would find a list of all the actors that are
-          following the actor.
-          The <code>followers</code> collection MUST be either an
+          activity を actor に送ったすべての人のリストで、<a href="#follow-activity-outbox">副作用</a>として追加されます。
+          これは、この actor をフォローしているすべての actor のリストです。
+          <code>followers</code> collection は、
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
             <code>OrderedCollection</code></a>
-          or a
+          または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          and MAY be filtered on privileges of an authenticated user
-          or as appropriate when no authentication is given.
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
 
-        <p class="note" title="Default for notification targeting">
-          The follow activity generally is a request to see the objects an actor
-          creates. This makes the Followers collection an appropriate default
-          target for <a href="#delivery">delivery</a> of notifications.
+        <p class="note" title="通知先の既定値">
+          Follow activity は、一般には、ある actor が作るオブジェクトを見るためのリクエストです。
+          これにより、Followers collection は、通知の<a href="#delivery">配送</a>を行うときの適切な既定値になります。
         </p>
       </section>
 
       <section id="following">
         <h2>Following Collection</h2>
         <p>
-          Every actor SHOULD have a <code>following</code> collection.
-          This is a list of everybody that the actor has followed, added as a
-          <a href="#follow-activity-outbox">side effect</a>.
-          The <code>following</code> collection MUST be either an
+          すべての actor は <code>following</code> collection を持つべきです。
+          これはその actor がフォローしたすべての人のリストであり、<a href="#follow-activity-outbox">副作用</a>として追加されるものです。
+          <code>following</code> collection は、
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
             <code>OrderedCollection</code></a>
-          or a
+          または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          and MAY be filtered on privileges of an authenticated user
-          or as appropriate when no authentication is given.
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
       </section>
 
       <section id="liked">
         <h2>Liked Collection</h2>
         <p>
-          Every actor MAY have a <code>liked</code> collection.
-          This is a list of every object from all of the actor's <code>Like</code>
-          activities, added as a <a href="#like-activity-outbox">side effect</a>.
-          The <code>liked</code> collection MUST be either an
+          すべての actor は <code>liked</code> collection を持ってもよいです。
+          これはその actor のすべての <code>Like</code> activity のすべてのオブジェクトのリストであり、<a href="#follow-activity-outbox">副作用</a>として追加されるものです。
+          <code>liked</code> collection は、
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
             <code>OrderedCollection</code></a>
-          or a
+          または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          and MAY be filtered on privileges of an authenticated user
-          or as appropriate when no authentication is given.
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
       </section>
 
       <section id="public-addressing">
         <h2>Public Addressing</h2>
         <p>
-          In addition to [[!ActivityStreams]] collections and objects,
-          Activities may additionally be addressed to the special "public"
-          collection, with the identifier
-          <code>https://www.w3.org/ns/activitystreams#Public</code>.
-          For example:
+          [[!ActivityStreams]] の collection やオブジェクトに加えて、activity は
+          <code>https://www.w3.org/ns/activitystreams#Public</code>
+          という識別子を使って特別な "public" の collection に宛てることができます。
+          例えば：
         </p>
         <pre class="example">
           {
@@ -920,27 +871,20 @@
           }
         </pre>
         <p>
-          Activities addressed to this special URI shall be accessible to all
-          users, without authentication.
-          Implementations MUST NOT deliver to the "public" special collection;
-          it is not capable of receiving actual activities.
-          However, actors MAY have a
+          この特殊な URI に宛てられた activity は、すべてのユーザーが認証なしでアクセスできるとよいでしょう。
+          実装は "public" の特殊な collection に向けて配送してはいけません。
+          それは実際の activity を受信する機能を持っていません。
+          しかしながら、actor は、公開投稿やフォロワー限定の投稿の、効率的な共同の配送のための
           <a href="#sharedInbox"><code>sharedInbox</code></a>
-          endpoint which is available for efficient shared delivery of public
-          posts (as well as posts to followers-only); see
-          <a href="#shared-inbox-delivery"></a>.
+          エンドポイントを持ってもよいです（フォロワー限定の投稿も同様）。
+          詳細は<a href="#shared-inbox-delivery"></a>を参照してください。
         </p>
         <div class="note">
           <p>
-            Compacting an ActivityStreams object using the ActivityStreams
-            JSON-LD context might result in
+            ActivityStreams の JSON-LD context を使って ActivityStreams のオブジェクトをコンパクト化すると、
             <code>https://www.w3.org/ns/activitystreams#Public</code>
-            being represented as simply <code>Public</code> or <code>as:Public</code>
-            which are valid representations of the Public collection.
-            Implementations which treat ActivityStreams objects as simply
-            JSON rather than converting an incoming activity over to a
-            local context using JSON-LD tooling should be aware of this
-            and should be prepared to accept all three representations.
+            が <code>Public</code> または <code>as:Public</code> のように簡単に表現されることがあります。これらは、Public collection の正当な表現です。
+            JSON-LD のやり方で入ってくる activity をローカルのコンテキストに変換せず、単に JSON として ActivityStreams のオブジェクトを扱うような実装については、これに注意し、これらの3つの表現をすべて受け入れられるように準備しておくべきです。
           </p>
         </div>
       </section>
@@ -948,48 +892,39 @@
       <section id="likes">
         <h2>Likes Collection</h2>
         <p>
-          Every object MAY have a <code>likes</code> collection.
-          This is a list of all <code>Like</code> activities with this object
-          as the <code>object</code> property, added as a
-          <a href="#like-activity-inbox">side effect</a>.
-          The <code>likes</code> collection MUST be either an
+          すべてのオブジェクトは <code>likes</code> collection を持ってもよいです。
+          これは、<code>object</code> プロパティとしてこのオブジェクトが付いていたすべての
+          <code>Like</code> activity のリストで、<a href="#like-activity-inbox">副作用</a>として追加されます。
+          <code>likes</code> collection は、
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
             <code>OrderedCollection</code></a>
-          or a
+          または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          and MAY be filtered on privileges of an authenticated user
-          or as appropriate when no authentication is given.
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
+
 
         <div class="note">
           <p>
-            Care should be taken to not confuse the the
-            <a href="#likes"><code>likes</code></a>
-            collection with the similarly named but different
-            <a href="#liked"><code>liked</code></a> collection.
-            In sum:
+            <a href="#likes"><code>likes</code></a> collection と、名前が似ているが異なる
+            <a href="#liked"><code>liked</code></a> collection を混同しないように気をつけましょう。
+            要約すると：
           </p>
 
           <ul>
             <li>
               <b>liked:</b>
-              Specifically a property of actors.
-              This is a collection of <code>Like</code> activities performed
-              <i>by the actor</i>,
-              added to the collection as a
-              <a href="#like-activity-outbox">
-                side effect of delivery to the outbox</a>.
+              具体的には、actor のプロパティである。
+              これは、<i>その actor によって</i>行なわれた <code>Like</code> activity の collection であり、
+              <a href="#like-activity-outbox">outbox への配達の副作用</a>として collection に追加されます。
             </li>
 
             <li>
               <b>likes:</b>
-              May be a property of any object.
-              This is a collection of <code>Like</code> activities referencing
-              this object,
-              added to the collection as a
-              <a href="#like-activity-inbox">
-                side effect of delivery to the inbox</a>.
+              任意のオブジェクトのプロパティとなり得る。
+              これは、このオブジェクトを参照している <code>Like</code> activity の collection であり、
+              <a href="#like-activity-inbox">inbox への配達の副作用</a>として collection に追加されます。
             </li>
           </ul>
         </div>
@@ -998,18 +933,16 @@
       <section id="shares">
         <h2>Shares Collection</h2>
         <p>
-          Every object MAY have a <code>shares</code> collection.
-          This is a list of all <code>Announce</code> activities with this object
-          as the <code>object</code> property, added as a
-          <a href="#announce-activity-inbox">side effect</a>.
-          The <code>shares</code> collection MUST be either an
+          すべてのオブジェクトは <code>shares</code> collection を持ってもよいです。
+          これは、<code>object</code> プロパティとしてこのオブジェクトが付いていたすべての
+          <code>Announce</code> activity のリストで、<a href="#announce-activity-inbox">副作用</a>として追加されます。
+          <code>shares</code> collection は、
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection">
             <code>OrderedCollection</code></a>
-          or a
+          または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          and MAY be filtered on privileges of an authenticated user
-          or as appropriate when no authentication is given.
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
       </section>
     </section>
