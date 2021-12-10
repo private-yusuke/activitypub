@@ -792,7 +792,7 @@
         </p>
 
         <p>
-          サーバーは inbox によって返される activity の重複を除去しかねればいけません。ある activity が actor のフォロワーと、受信者となる actor をフォローしている actor を宛先としているときに、サーバーが受信者リストの重複除去に失敗すると重複が発生してしまいます。
+          サーバーは inbox によって返される activity の重複を除去しなければいけません。ある activity が actor のフォロワーと、受信者となる actor をフォローしている actor を宛先としているときに、サーバーが受信者リストの重複除去に失敗すると重複が発生してしまいます。
           そのような重複除去は、activity の <code>id</code> を比較して、すでに見た activity を落とすことで行なわれなければいけません。
         </p>
 
@@ -816,12 +816,12 @@
           または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          でなければならず、認証されたユーザーの特権または認証情報が与えられていないときには適切にフィルタリングされてもよいです。
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
 
         <p class="note" title="通知先の既定値">
-          Follow activity は、一般には、ある actor が作るオブジェクトを見るための要求です。
-          これにより、フォロワー の collection は、通知の<a href="#delivery">配送</a>を行うときの適切な既定値になります。
+          Follow activity は、一般には、ある actor が作るオブジェクトを見るためのリクエストです。
+          これにより、Followers collection は、通知の<a href="#delivery">配送</a>を行うときの適切な既定値になります。
         </p>
       </section>
 
@@ -836,7 +836,7 @@
           または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          でなければならず、認証されたユーザーの特権または認証情報が与えられていないときには適切にフィルタリングされてもよいです。
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
       </section>
 
@@ -851,7 +851,7 @@
           または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          でなければならず、認証されたユーザーの特権または認証情報が与えられていないときには適切にフィルタリングされてもよいです。
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
       </section>
 
@@ -872,7 +872,7 @@
         </pre>
         <p>
           この特殊な URI に宛てられた activity は、すべてのユーザーが認証なしでアクセスできるとよいでしょう。
-          実装は "public" の特殊な collection に向けて配信してはいけません。
+          実装は "public" の特殊な collection に向けて配送してはいけません。
           それは実際の activity を受信する機能を持っていません。
           しかしながら、actor は、公開投稿やフォロワー限定の投稿の、効率的な共同の配送のための
           <a href="#sharedInbox"><code>sharedInbox</code></a>
@@ -884,7 +884,7 @@
             ActivityStreams の JSON-LD context を使って ActivityStreams のオブジェクトをコンパクト化すると、
             <code>https://www.w3.org/ns/activitystreams#Public</code>
             が <code>Public</code> または <code>as:Public</code> のように簡単に表現されることがあります。これらは、Public collection の正当な表現です。
-            JSON-LD のやり方で入ってくる activity をローカルのコンテキストに変換せず、単に JSON として ActivityStreams のオブジェクトを扱うような実装については、これに注意し、これらの3つの表現をすべて受け入れられるように準備しておくべきである。
+            JSON-LD のやり方で入ってくる activity をローカルのコンテキストに変換せず、単に JSON として ActivityStreams のオブジェクトを扱うような実装については、これに注意し、これらの3つの表現をすべて受け入れられるように準備しておくべきです。
           </p>
         </div>
       </section>
@@ -901,7 +901,7 @@
           または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          でなければならず、認証されたユーザーの特権または認証情報が与えられていないときには適切にフィルタリングされてもよいです。
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
 
 
@@ -942,7 +942,7 @@
           または
           <a href="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-collection">
             <code>Collection</code></a>
-          でなければならず、認証されたユーザーの特権または認証情報が与えられていないときには適切にフィルタリングされてもよいです。
+          でなければならず、認証されたユーザーの特権に基いたり、認証情報が与えられていないときには適切にフィルタリングされてもよいです。
         </p>
       </section>
     </section>
