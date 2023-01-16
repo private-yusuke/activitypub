@@ -1401,295 +1401,176 @@ Location: https://dustycloud.org/likes/345
     </section>
 
     <section id="server-to-server-interactions">
-      <h2>Server to Server Interactions</h2>
+      <h2>サーバー間の振る舞い</h2>
       <p>
-        Servers communicate with other servers and propagate information across
-        the social graph by posting activities to actors'
-        <a href="#inbox">inbox</a> endpoints.
-        An Activity sent over the network SHOULD have an <code>id</code>,
-        unless it is intended to be transient (in which case it MAY omit the
-        <code>id</code>).
+        サーバーは、actor の <a href="#inbox">inbox</a> のエンドポイントに activity を post することでソーシャルグラフを介した情報の伝達を他のサーバーと行います。
+        ネットワーク越しに送信された activity は、それが一時的なものであると意図したものでない限りは <code>id</code> を持つべきです（一時的なものであるときは <code>id</code> を抜くことができます）。
       <p>
-        <code>POST</code> requests (eg. to the inbox) MUST be made with a Content-Type of
-        <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code>
-        and <code>GET</code> requests (see also <a href="#retrieving-objects"></a>) 
-        with an Accept header of 
-        <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code>.
-        Servers SHOULD interpret a Content-Type or Accept
-        header of <code>application/activity+json</code> as equivalent
-        to <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code>
-        for server-to-server interactions.
+        （inbox に向けたもの等の）<code>POST</code> リクエストは <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> という Content-Type と共に作成しなければいけません。また、<code>GET</code> リクエストは <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> という Accept ヘッダと共に作成しなければいけません（<a href="#retrieving-objects"></a> も参照）。
+        サーバーは、サーバー間の振る舞いの際には <code>application/activity+json</code> の Content-Type または Accept ヘッダは <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> と同等のものとして解釈すべきです。
       </p>
       <p>
-        In order to propagate updates throughout the social graph, Activities
-        are sent to the appropriate recipients.
-        First, these recipients are determined through following the
-        appropriate links between objects until you reach an actor, and then
-        the Activity is inserted into the actor's <em>inbox</em>
-        (<a href="#delivery">delivery</a>).
-        This allows recipient servers to:
+        ソーシャルグラフ全体を通して更新の伝搬を行うため、activity は適切な受信者に送信されます。
+        最初に、これらの受信者は actor に到達するまでオブジェクト間の適切なリンクを辿ることで決定され、その後 activity が actor の <em>inbox</em> に挿入されます（<a href="#delivery">配送</a>）。
+        これによって、受け取る側のサーバーは次のことができるようになります：
       </p>
       <ul>
         <li>
-          conduct any side effects related to the Activity (for example,
-          notification that an actor has liked an object is used to update the
-          object's like count);
+          その activity に関する任意の副作用を施す（例えば、ある actor がある object を like したという通知が、その object の like 回数を更新するために利用される）
         </li>
         <li>
-          deliver the Activity to recipients of the original object, to ensure
-          updates are propagated to the whole social graph (see <a href="#inbox-forwarding">
-          inbox delivery</a>).
+          更新がソーシャルグラフ全体に伝搬したことを確実にするため、activity を元オブジェクトの受信者に配送する（<a href="#inbox-forwarding">inbox への配送</a>を参照）
         </li>
       </ul>
-      <p>Delivery is usually triggered by, for example:</p>
+      <p>配送は通常、次のようなもので引き起こされます：</p>
       <ul>
         <li>
-          an Activity being created in an actor's <a href="#outbox">outbox</a>
-          with their <a href="#followers">Followers Collection</a> as the
-          recipient.
+          actor の <a href="#outbox">outbox</a> で、受信者として <a href="#followers">Followers Collection</a> が指定された activity が作成された
         </li>
         <li>
-          an Activity being created in an actor's <a href="#outbox">outbox</a>
-          with directly addressed recipients.
+          actor の <a href="#outbox">outbox</a> で、受信者が直接指定された activity が作成された
         </li>
         <li>
-          an Activity being created in an actors's <a href="#outbox">outbox</a>
-          with user-curated collections as recipients.
+          actor の <a href="#outbox">outbox</a> で、受信者としてユーザーによって選択された collection が指定された activity が作成された
         </li>
         <li>
-          an Activity being created in an actor's <a href="#outbox">outbox</a> or
-          <a href="#inbox">inbox</a> which references another object.
+          actor の <a href="#outbox">outbox</a> または <a href="#inbox">inbox</a> で、他のオブジェクトを参照する activity が作成された
         </li>
       </ul>
 
       <p>
-        Servers performing delivery to the <code>inbox</code> or
-        <code>sharedInbox</code> properties of actors on other servers MUST
-        provide the <code>object</code> property in the activity:
+        他のサーバー上にある actor が持つ <code>inbox</code> または <code>sharedInbox</code> プロパティへの配送を実施するサーバーは、次の activity の中には <code>object</code> プロパティを含めなければなりません：
         <code>Create</code>, <code>Update</code>, <code>Delete</code>,
         <code>Follow</code>, <code>Add</code>, <code>Remove</code>,
-        <code>Like</code>, <code>Block</code>, <code>Undo</code>.
-        Additionally, servers performing server to server delivery of the
-        following activities MUST also provide the <code>target</code>
-        property: <code>Add</code>, <code>Remove</code>.
+        <code>Like</code>, <code>Block</code>, <code>Undo</code>。
+        さらに、次の activity の配送をサーバー間で実施するサーバーは、<code>target</code> プロパティを含めなければなりません：<code>Add</code>, <code>Remove</code>。
       </p>
 
       <p>
-        HTTP caching mechanisms [[!RFC7234]] SHOULD be respected when
-        appropriate, both when receiving responses from other servers as well
-        as sending responses to other servers.
+        HTTP キャッシュ機構 [[!RFC7234]] は、他のサーバーからレスポンスを受け取る際や、他のサーバーへレスポンスを送信する際の両方において、適切な際に尊重されているべきです。
       </p>
 
       <section id="delivery">
-        <h2>Delivery</h2>
+        <h2>配送</h2>
 
         <p><i>
-          The following is required by federated servers communicating with
-          other federated servers only.
+          以下のことは、他の連合サーバーと伝達を行う連合サーバーにおいてのみ要求されるものです。
         </i></p>
 
         <p>
-          An activity is delivered to its targets (which are
-          <a href="#actors">actors</a>) by first looking up the targets'
-          inboxes and then posting the activity to those inboxes.
-          Targets for delivery are determined by checking the
-          <a href="https://www.w3.org/TR/activitystreams-vocabulary/#audienceTargeting">
-            ActivityStreams audience targeting</a>;
-          namely, the <code>to</code>, <code>bto</code>, <code>cc</code>,
-          <code>bcc</code>, and <code>audience</code> fields of the activity.
+          activity は、最初に対象たち（<a href="#actors">actors</a>）の inbox を探し、それらに対して投稿することによって、その対象たちに配送されます。
+          配送の対象は <a href="https://www.w3.org/TR/activitystreams-vocabulary/#audienceTargeting">
+            ActivityStreams audience targeting</a> を確認することによって決定される。すなわち、activity の <code>to</code>, <code>bto</code>, <code>cc</code>, <code>bcc</code>, そして <code>audience</code> フィールドを確認すればよいです。
         </p>
 
         <p>
-          The <a href="#inbox">inbox</a> is determined by first
-          <a href="#retrieving-objects">
-            retrieving the target actor's JSON-LD representation</a>
-          and then looking up the <code>inbox</code> property.
-          If a recipient is a <code>Collection</code> or <code>OrderedCollection</code>,
-          then the server MUST dereference the collection (with the user's
-          credentials) and discover inboxes for each item in the collection.
-          Servers MUST limit the number of layers of indirections through
-          collections which will be performed, which MAY be one.
+          <a href="#inbox">inbox</a> は、まず <a href="#retrieving-objects">JSON-LD で表現された対象の actor を受け取って</a>、それから <code>inbox</code> プロパティを探すことで確定されます。
+          もし受信者が <code>Collection</code> または <code>OrderedCollection</code> であるならば、サーバーはその collection を（そのユーザーの資格情報と共に）展開し、collection 内のそれぞれの要素の inbox を見つけ出さなければいけません。
+          サーバーは collection を通した間接参照の層の数を制限しなければいけませんが、これは 1 でもよいです。
         </p>
 
         <p>
-          Servers MUST de-duplicate the final recipient list. Servers MUST also
-          exclude actors from the list which are the same as the <code>actor</code>
-          of the Activity being notified about. That is, actors shouldn't have their
-          own activities delivered to themselves.
+          サーバーは最終的な受信者の一覧から重複する要素を取り除かなければいけません。
+          サーバーはまた、通知される activity の <code>actor</code> と同じ actor をリストから除去しなければいけません。
+          すなわち、actor には自身の activity が配送されないはずであるということです。
         </p>
 
         <p class="note" title="Silent and private activities">
-          What to do when there are no recipients specified is not defined,
-          however it's recommended that if no recipients are specified the
-          object remains completely private and access controls restrict the
-          access to object.
-          If the object is just sent to the "public" collection the object is
-          not delivered to any actors but is publicly viewable in the actor's
-          outbox.
+          受信者が指定されていないときにすることは未定義ですが、そのような場合には object を完全に非公開とし、アクセスコントロールがその object へのアクセスを制限することが推奨されます。
+          もし、その object が単に "public" コレクションに送信されたならば、その object はどの actor にも配送されませんが、actor の outbox で公に閲覧可能になります。
         </p>
 
         <p>
-          An HTTP POST request (with authorization of the submitting user) is
-          then made to the <a href="#inbox">inbox</a>, with the Activity as
-          the body of the request.
-          This Activity is added by the receiver as an <code>item</code> in the
-          <a href="#inbox">inbox</a> OrderedCollection.
-          Attempts to deliver to an inbox on a non-federated server SHOULD
-          result in a <code>405 Method Not Allowed</code> response.
+          次に、その activity を body とした（投稿するユーザーの認可付きの）HTTP POST リクエストが <a href="#inbox">inbox</a> に行われます。
+          この activity はレシーバによって <a href="#inbox">inbox</a> OrderedCollection の <code>item</code> として追加されます。
+          連合していないサーバーによる inbox への配送の試みには <code>405 Method Not Allowed</code> レスポンスを返すべきです。
         </p>
 
         <p>
-          For federated servers performing delivery to a third party server,
-          delivery SHOULD be performed asynchronously, and SHOULD additionally
-          retry delivery to recipients if it fails due to network error.
+          第三者のサーバーへ配送を試みる連合サーバーについては、配送は非同期に実行されるべきであり、さらにネットワークエラーによって失敗した場合には配送を再試行すべきです。
         </p>
 
         <p>
-          <strong>Note:</strong> Activities being distributed between actors on
-          the same origin may use any internal mechanism, and are not required
-          to use HTTP.
+          <strong>注意：</strong>同一オリジン上での actor 間の activity の分配には任意の内部的な機構を利用してもよく、HTTP を利用することは要求されない。
         </p>
 
         <p class="note" id="ldn-relationship" title="Relationship to Linked Data Notifications">
-          While it is not required reading to understand this specification,
-          it is worth noting that ActivityPub's targeting and delivery
-          mechanism overlaps with the
-          <a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a>
-          specification, and the two specifications may interoperably
-          combined.
-          In particular, the <code>inbox</code> property is the same between
-          ActivityPub and Linked Data Notifications, and the targeting
-          and delivery systems described in this document are supported
-          by Linked Data Notifications.
-          In addition to JSON-LD compacted ActivityStreams documents, Linked
-          Data Notifications also supports a number of RDF serializations
-          which are not required for ActivityPub implementations.
-          However, ActivityPub implementations which wish to be more broadly
-          compatible with Linked Data Notifications implementations may wish to
-          support other RDF representations.
+          この仕様を理解するために読むことは必須ではありませんが、ActivityPub のターゲティングと配送の機構は <a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a> の仕様と重なる部分があり、二つの仕様は相互運用的に組み合わせられることは特筆する価値があります。
+          徳に、<code>inbox</code> プロパティは ActivityPub と Linked Data Notifications の間で同一であり、このドキュメントで説明されているターゲティングと配送システムは Linked Data Notifications でサポートされています。
+          JSON-LD で詰められた ActivityStreams の文書に加えて、Linked Data Notifications は ActivityPub の実装には必要のない数々の RDF シリアライズもサポートしています。
+          しかしながら、Linked Data Notifications に対してより広範に互換性を持たせたい ActivityPub の実装では、他の RDF の表現に対応したほうがよいでしょう。
         </p>
 
         <section id="outbox-delivery">
-          <h3>Outbox Delivery Requirements for Server to Server</h3>
+          <h3>サーバー間の outbox への配送時の要件</h3>
           <p>
-            When objects are received in the <a href="#outbox">outbox</a>
-            (for servers which support both
-            <a href="#client-to-server-interactions">Client to Server interactions</a>
-            and
-            <a href="#server-to-server-interactions">Server to Server Interactions</a>),
-            the server MUST target and deliver to:
+            （<a href="#client-to-server-interactions">クライアント─サーバー間の振る舞い</a>と<a href="#server-to-server-interactions">サーバー間の振る舞い</a>の両方をサポートしているサーバーについては）<a href="#outbox">outbox</a> で object を受け取ったとき、サーバーは次のものを対象にして配送しなければいけません：
           </p>
           <ul>
             <li>
-              The <code>to</code>, <code>bto</code>, <code>cc</code>,
-              <code>bcc</code> or <code>audience</code> fields if their values
-              are individuals or Collections owned by the actor.
+              値が actor によって所有されている個人または collection である場合、<code>to</code>, <code>bto</code>, <code>cc</code>,
+              <code>bcc</code> または <code>audience</code> フィールドのいずれか
             </li>
           </ul>
           <p>
-            These fields will have been <a href="#client-addressing">
-            populated appropriately by the client</a> which posted the Activity
-            to the outbox.
+            これらのフィールドは、activity を outbox に投稿した<a href="#client-addressing">クライアントによって適切に展開されている</a>ことになることでしょう。
           </p>
         </section>
 
         <section id="inbox-forwarding">
-          <h3>Forwarding from Inbox</h3>
+          <h3>inbox からの転送</h3>
 
           <div class="note" title="Forwarding to avoid the ghost replies problem">
             <p>
-              The following section is to mitigate the "ghost replies" problem
-              which occasionally causes problems on federated networks.
-              This problem is best demonstrated with an example.
+              次の章は、連合するネットワークの上でときどき問題を引き起こす「ゴーストリプライ」という問題を軽減するためのものです。
+              この問題は一例と共に示すのがわかりやすいです。
             </p>
 
             <p>
-              Alyssa makes a post about her having successfully presented a
-              paper at a conference and sends it to her followers collection,
-              which includes her friend Ben.
-              Ben replies to Alyssa's message congratulating her and includes
-              her followers collection on the recipients.
-              However, Ben has no access to see the members of Alyssa's
-              followers collection, so his server does not forward his messages
-              to their inbox.
-              Without the following mechanism, if Alyssa were then to reply to
-              Ben, her followers would see Alyssa replying to Ben without having
-              ever seen Ben interacting.
-              This would be very confusing!
+              Alyssa は会議での論文の発表が上手くいったことを投稿し、友達の Ben を含むフォロワーの collection に送信しました。
+              Ben は Alyssa のメッセージに対してお祝いのメッセージを送信し、そこには受信者として彼女のフォロワーの collection を含めました。
+              しかしながら、Ben は Alyssa のフォロワーの collection のメンバーを見ることができないので、彼のサーバーは彼らの inbox にそのメッセージを転送できません。
+              次の機構なしで、もし Alyssa が次に Ben へ返信したときには、彼女のフォロワーは Ben の対話を見ることなく Alyssa が Ben に返信しているのを見ることになります。これは大変混乱します！
             </p>
           </div>
 
           <p>
-            When Activities are received in the <a href="#inbox">inbox</a>, the
-            server needs to forward these to recipients that the origin was unable
-            to deliver them to. To do this, the server MUST target and
-            <a href="#delivery">deliver</a>
-            to the values of <code>to</code>, <code>cc</code>, and/or <code>audience</code>
-            if and only if all of the following are true:
+            <a href="#inbox">inbox</a> で activity を受け取ったとき、サーバーは送信元が配送できなかった受信者にそれらを転送する必要があります。これをするには、サーバーは次の全てが真であるとき、かつそのときに限って、サーバーは <code>to</code>, <code>cc</code>, そして <code>audience</code> の値にターゲットして<a href="#delivery">配送</a>をしなければいけません：
           </p>
           <ul>
-            <li>This is the first time the server has seen this Activity.</li>
-            <li>
-              The values of <code>to</code>, <code>cc</code>, and/or
-              <code>audience</code> contain a Collection owned by the server.
+            <li>サーバーがこの activity を見るのが初めてである。
             </li>
             <li>
-              The values of <code>inReplyTo</code>, <code>object</code>,
-              <code>target</code> and/or <code>tag</code> are objects owned by
-              the server.
-              The server SHOULD recurse through these values to look for linked objects
-              owned by the server, and SHOULD set a maximum limit for recursion (ie. the
-              point at which the thread is so deep the recipients followers may not mind
-              if they are no longer getting updates that don't directly involve the
-              recipient).
-              The server MUST only target the values of <code>to</code>,
-              <code>cc</code>, and/or <code>audience</code>
-              on the original object being forwarded, and not pick up any new
-              addressees whilst recursing through the linked objects
-              (in case these addressees were purposefully amended by or via the client).
+              <code>to</code>, <code>cc</code>, そして <code>audience</code> の値がそのサーバーが所有している object である。
+            </li>
+            <li>
+              <code>inReplyTo</code>, <code>object</code>,
+              <code>target</code> そして <code>tag</code> の値がそのサーバーが所有している object である。
+              サーバーは、自身が所有しているリンクされた object を探すためにこれらの値を再帰的に処理するべきであり、再帰回数の上限を設定するべきです（すなわち、それほどスレッドが深くなった段階においては、受信者であるフォロワーは直接的に受信者を含まない更新を受け取らなくなっても気にしなくなるかもしれません）。
+              サーバーは転送された元のオブジェクトの <code>to</code>, <code>cc</code>, そして <code>audience</code> の値のみをターゲットとし、リンクされた object を再帰的に処理しながらも新たな（意図的に変更されたり、クライアント経由で得られた）アドレスを拾わないようにしなければなりません。
             </li>
           </ul>
           <p>
-            The server MAY filter its delivery targets according to
-            implementation-specific rules (for example, spam filtering).
+            サーバーは配送ターゲットを実装依存の規則に基いてフィルターしてもよいです（例えば、スパムのフィルタリングなど）。
           </p>
         </section>
 
         <section id="shared-inbox-delivery">
-          <h2>Shared Inbox Delivery</h2>
+          <h2>共有 inbox への配送</h2>
           <p>
-            For servers hosting many actors, delivery to all followers can
-            result in an overwhelming number of messages sent.
-            Some servers would also like to display a list of all messages
-            posted publicly to the "known network".
-            Thus ActivityPub provides an optional mechanism for serving these
-            two use cases.
+            数多くの actor をホストしているサーバーによっては、すべてのフォロワーへの配送は圧倒的な数のメッセージを送信することにつながってしまいます。
+            一部のサーバーはまた、公に対して投稿されたすべてのメッセージを「知り合いのネットワーク」として表示したいでしょう。
+            そこで、ActivityPub はこれら二つのユースケースを扱うためのオプショナルな機構を提供します。
           </p>
           <p>
-            When an object is being delivered to the originating actor's
-            followers, a server MAY reduce the number of receiving actors
-            delivered to by identifying all followers which share the same
-            <a href="#sharedInbox">sharedInbox</a>
-            who would otherwise be individual recipients and instead deliver
-            objects to said <code>sharedInbox</code>.
-            Thus in this scenario, the remote/receiving server participates
-            in determining targeting and performing delivery to specific
-            inboxes.
+            配送元 actor のフォロワーに object が配送されるとき、サーバーは同じ <a href="#sharedInbox">sharedInbox</a> を持つすべてのフォロワーを識別することで、各々の受信者を指定するのではなく <code>sharedInbox</code> に指定されたところに object を配送することができ、これによって配送されたものを受け取る actor の数を減らしてもよいです。
+            したがって、このシナリオでは、リモートまたは受信側のサーバーはターゲティングの決定および特定の inbox への配送の実行に携わることになります。
           </p>
           <p>
-            Additionally, if an object is addressed to the
-            <a href="#public-addressing">Public</a> special collection, a
-            server MAY deliver that object to all known
-            <code>sharedInbox</code> endpoints on the network.
+            さらに、もし object が <a href="#public-addressing">Public</a> という特別な collection に向けられたものであるならば、サーバーはネットワーク上のすべての既知の <code>sharedInbox</code> に配送してもよいです。
           </p>
           <p>
-            Origin servers sending publicly addressed activities to
-            <code>sharedInbox</code> endpoints MUST still deliver to actors
-            and collections otherwise addressed (through <code>to</code>,
-            <code>bto</code>, <code>cc</code>, <code>bcc</code>, and
-            <code>audience</code>) which do not have a <code>sharedInbox</code>
-            and would not otherwise receive the activity through the
-            <code>sharedInbox</code> mechanism.
+            公に向けられた activity を <code>sharedInbox</code> エンドポイントに送信する送信元サーバーは、（<code>to</code>, <code>bto</code>, <code>cc</code>, <code>bcc</code>, または <code>audience</code> を通して）向けられた、仮に <code>sharedInbox</code> を持っていればその機構を通して activity を受け取っていたが実際には <code>sharedInbox</code> を持たないような actor や collection にも、依然として配送しなければいけません。
           </p>
         </section>
       </section>
