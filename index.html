@@ -1404,19 +1404,19 @@ Location: https://dustycloud.org/likes/345
       <h2>サーバー間の振る舞い</h2>
       <p>
         サーバーは、actor の <a href="#inbox">inbox</a> のエンドポイントに activity を post することでソーシャルグラフを介した情報の伝達を他のサーバーと行います。
-        ネットワーク越しに送信された activity は、それが一時的なものであると意図したものでない限りは <code>id</code> を持つべきです（一時的なものであるときは <code>id</code> を抜くことができます）。
+        ネットワーク越しに送信された activity は、それが一時的なものであると意図したものでない限りは <code>id</code> を持つべきです（一時的なものであるときは <code>id</code> を省略することができます）。
       <p>
-        （inbox に向けたもの等の）<code>POST</code> リクエストは <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> という Content-Type と共に作成しなければいけません。また、<code>GET</code> リクエストは <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> という Accept ヘッダと共に作成しなければいけません（<a href="#retrieving-objects"></a> も参照）。
-        サーバーは、サーバー間の振る舞いの際には <code>application/activity+json</code> の Content-Type または Accept ヘッダは <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> と同等のものとして解釈すべきです。
+        （inbox に向けたもの等の）<code>POST</code> リクエストは Content-Type に <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> を設定した上で作成しなければいけません。また、<code>GET</code> リクエストは Accept ヘッダに <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> を設定した上で作成しなければいけません（<a href="#retrieving-objects"></a> も参照）。
+        サーバーは、サーバー間の振る舞いの際に Content-Type や Accept ヘッダに <code>application/activity+json</code> が設定されていたならば、これを <code>application/ld+json; profile="https://www.w3.org/ns/activitystreams"</code> と同等のものとして解釈すべきです。
       </p>
       <p>
-        ソーシャルグラフ全体を通して更新の伝搬を行うため、activity は適切な受信者に送信されます。
+        ソーシャルグラフ全体を通して更新の伝搬を行うために、activity は適切な受信者に送信されます。
         最初に、これらの受信者は actor に到達するまでオブジェクト間の適切なリンクを辿ることで決定され、その後 activity が actor の <em>inbox</em> に挿入されます（<a href="#delivery">配送</a>）。
         これによって、受け取る側のサーバーは次のことができるようになります：
       </p>
       <ul>
         <li>
-          その activity に関する任意の副作用を施す（例えば、ある actor がある object を like したという通知が、その object の like 回数を更新するために利用される）
+          その activity に関する任意の副作用を施す（例えば、ある actor がある object を like したという通知が、その object の like された回数を更新するために利用される）
         </li>
         <li>
           更新がソーシャルグラフ全体に伝搬したことを確実にするため、activity を元オブジェクトの受信者に配送する（<a href="#inbox-forwarding">inbox への配送</a>を参照）
@@ -1431,7 +1431,7 @@ Location: https://dustycloud.org/likes/345
           actor の <a href="#outbox">outbox</a> で、受信者が直接指定された activity が作成された
         </li>
         <li>
-          actor の <a href="#outbox">outbox</a> で、受信者としてユーザーによって選択された collection が指定された activity が作成された
+          actor の <a href="#outbox">outbox</a> で、受信者としてユーザーによって整理された collection たちが指定された activity が作成された
         </li>
         <li>
           actor の <a href="#outbox">outbox</a> または <a href="#inbox">inbox</a> で、他のオブジェクトを参照する activity が作成された
@@ -1443,7 +1443,7 @@ Location: https://dustycloud.org/likes/345
         <code>Create</code>, <code>Update</code>, <code>Delete</code>,
         <code>Follow</code>, <code>Add</code>, <code>Remove</code>,
         <code>Like</code>, <code>Block</code>, <code>Undo</code>。
-        さらに、次の activity の配送をサーバー間で実施するサーバーは、<code>target</code> プロパティを含めなければなりません：<code>Add</code>, <code>Remove</code>。
+        さらに、次の activity の配送をサーバー間で実施するサーバーは、<code>target</code> プロパティも含めなければなりません：<code>Add</code>, <code>Remove</code>。
       </p>
 
       <p>
@@ -1454,19 +1454,19 @@ Location: https://dustycloud.org/likes/345
         <h2>配送</h2>
 
         <p><i>
-          以下のことは、他の連合サーバーと伝達を行う連合サーバーにおいてのみ要求されるものです。
+          以下のことは、他の連合サーバーと伝達を行う連合サーバーによってのみ要求されるものです。
         </i></p>
 
         <p>
           activity は、最初に対象たち（<a href="#actors">actors</a>）の inbox を探し、それらに対して投稿することによって、その対象たちに配送されます。
           配送の対象は <a href="https://www.w3.org/TR/activitystreams-vocabulary/#audienceTargeting">
-            ActivityStreams audience targeting</a> を確認することによって決定される。すなわち、activity の <code>to</code>, <code>bto</code>, <code>cc</code>, <code>bcc</code>, そして <code>audience</code> フィールドを確認すればよいです。
+            ActivityStreams audience targeting</a> を確認することによって決定されます。すなわち、activity の <code>to</code>, <code>bto</code>, <code>cc</code>, <code>bcc</code>, そして <code>audience</code> フィールドを確認すればよいです。
         </p>
 
         <p>
           <a href="#inbox">inbox</a> は、まず <a href="#retrieving-objects">JSON-LD で表現された対象の actor を受け取って</a>、それから <code>inbox</code> プロパティを探すことで確定されます。
           もし受信者が <code>Collection</code> または <code>OrderedCollection</code> であるならば、サーバーはその collection を（そのユーザーの資格情報と共に）展開し、collection 内のそれぞれの要素の inbox を見つけ出さなければいけません。
-          サーバーは collection を通した間接参照の層の数を制限しなければいけませんが、これは 1 でもよいです。
+          サーバーは collection を通した間接参照の層の解消回数を制限しなければいけませんが、これは 1 でもよいです。
         </p>
 
         <p>
@@ -1491,12 +1491,12 @@ Location: https://dustycloud.org/likes/345
         </p>
 
         <p>
-          <strong>注意：</strong>同一オリジン上での actor 間の activity の分配には任意の内部的な機構を利用してもよく、HTTP を利用することは要求されない。
+          <strong>注意：</strong>同一オリジン上での actor 間の activity の分配には任意の内部的な機構を利用してもよく、HTTP を利用することは要求されません。
         </p>
 
         <p class="note" id="ldn-relationship" title="Relationship to Linked Data Notifications">
           この仕様を理解するために読むことは必須ではありませんが、ActivityPub のターゲティングと配送の機構は <a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a> の仕様と重なる部分があり、二つの仕様は相互運用的に組み合わせられることは特筆する価値があります。
-          徳に、<code>inbox</code> プロパティは ActivityPub と Linked Data Notifications の間で同一であり、このドキュメントで説明されているターゲティングと配送システムは Linked Data Notifications でサポートされています。
+          特に、<code>inbox</code> プロパティは ActivityPub と Linked Data Notifications の間で同一であり、このドキュメントで説明されているターゲティングと配送システムは Linked Data Notifications でサポートされています。
           JSON-LD で詰められた ActivityStreams の文書に加えて、Linked Data Notifications は ActivityPub の実装には必要のない数々の RDF シリアライズもサポートしています。
           しかしながら、Linked Data Notifications に対してより広範に互換性を持たせたい ActivityPub の実装では、他の RDF の表現に対応したほうがよいでしょう。
         </p>
@@ -1535,18 +1535,18 @@ Location: https://dustycloud.org/likes/345
           </div>
 
           <p>
-            <a href="#inbox">inbox</a> で activity を受け取ったとき、サーバーは送信元が配送できなかった受信者にそれらを転送する必要があります。これをするには、サーバーは次の全てが真であるとき、かつそのときに限って、サーバーは <code>to</code>, <code>cc</code>, そして <code>audience</code> の値にターゲットして<a href="#delivery">配送</a>をしなければいけません：
+            <a href="#inbox">inbox</a> で activity たちを受け取ったとき、そのサーバーは送信元が配送できなかった受信者にそれらを転送する必要があります。これをするには、次の全てが真であるとき、かつそのときに限って、サーバーは <code>to</code>, <code>cc</code>, そして <code>audience</code> の値にターゲットして<a href="#delivery">配送</a>しなければいけません：
           </p>
           <ul>
-            <li>サーバーがこの activity を見るのが初めてである。
+            <li>サーバーはこの activity を見るのが初めてである。
             </li>
             <li>
-              <code>to</code>, <code>cc</code>, そして <code>audience</code> の値がそのサーバーが所有している object である。
+              <code>to</code>, <code>cc</code>, そして <code>audience</code> の値はそのサーバーが所有している object である。
             </li>
             <li>
               <code>inReplyTo</code>, <code>object</code>,
-              <code>target</code> そして <code>tag</code> の値がそのサーバーが所有している object である。
-              サーバーは、自身が所有しているリンクされた object を探すためにこれらの値を再帰的に処理するべきであり、再帰回数の上限を設定するべきです（すなわち、それほどスレッドが深くなった段階においては、受信者であるフォロワーは直接的に受信者を含まない更新を受け取らなくなっても気にしなくなるかもしれません）。
+              <code>target</code> そして <code>tag</code> の値はそのサーバーが所有している object である。
+              サーバーは、自身が所有しているリンクされた object を探すためにこれらの値を再帰的に処理するべきであり、また再帰回数の上限を設定するべきです（すなわち、それほどスレッドが深くなった段階においては、受信者であるフォロワーは直接的に受信者を含まない更新を受け取らなくなっても気にしなくなるかもしれません）。
               サーバーは転送された元のオブジェクトの <code>to</code>, <code>cc</code>, そして <code>audience</code> の値のみをターゲットとし、リンクされた object を再帰的に処理しながらも新たな（意図的に変更されたり、クライアント経由で得られた）アドレスを拾わないようにしなければなりません。
             </li>
           </ul>
