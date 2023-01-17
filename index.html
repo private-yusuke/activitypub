@@ -1475,7 +1475,7 @@ Location: https://dustycloud.org/likes/345
           すなわち、actor には自身の activity が配送されないはずであるということです。
         </p>
 
-        <p class="note" title="Silent and private activities">
+        <p class="note" title="サイレントおよび非公開な activity">
           受信者が指定されていないときにすることは未定義ですが、そのような場合には object を完全に非公開とし、アクセスコントロールがその object へのアクセスを制限することが推奨されます。
           もし、その object が単に "public" コレクションに送信されたならば、その object はどの actor にも配送されませんが、actor の outbox で公に閲覧可能になります。
         </p>
@@ -1494,7 +1494,7 @@ Location: https://dustycloud.org/likes/345
           <strong>注意：</strong>同一オリジン上での actor 間の activity の分配には任意の内部的な機構を利用してもよく、HTTP を利用することは要求されません。
         </p>
 
-        <p class="note" id="ldn-relationship" title="Relationship to Linked Data Notifications">
+        <p class="note" id="ldn-relationship" title="Linked Data Notifications との関係">
           この仕様を理解するために読むことは必須ではありませんが、ActivityPub のターゲティングと配送の機構は <a href="https://www.w3.org/TR/ldn/">Linked Data Notifications</a> の仕様と重なる部分があり、二つの仕様は相互運用的に組み合わせられることは特筆する価値があります。
           特に、<code>inbox</code> プロパティは ActivityPub と Linked Data Notifications の間で同一であり、このドキュメントで説明されているターゲティングと配送システムは Linked Data Notifications でサポートされています。
           JSON-LD で詰められた ActivityStreams の文書に加えて、Linked Data Notifications は ActivityPub の実装には必要のない数々の RDF シリアライズもサポートしています。
@@ -1520,7 +1520,7 @@ Location: https://dustycloud.org/likes/345
         <section id="inbox-forwarding">
           <h3>inbox からの転送</h3>
 
-          <div class="note" title="Forwarding to avoid the ghost replies problem">
+          <div class="note" title="ゴーストリプライ問題を回避するための転送">
             <p>
               次の章は、連合するネットワークの上でときどき問題を引き起こす「ゴーストリプライ」という問題を軽減するためのものです。
               この問題は一例と共に示すのがわかりやすいです。
